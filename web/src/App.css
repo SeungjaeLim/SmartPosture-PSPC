@@ -1,0 +1,35 @@
+/* In App.css */
+
+@font-face {
+  font-family: 'SuiteSemiBold';
+  src: url('/fonts/SUITE-SemiBold.ttf') format('truetype');
+}
+
+body {
+  font-family: 'SuiteSemiBold', sans-serif;
+}
+
+.App {
+  padding: 20px;
+}
+
+.login-form, .stopwatch-page, .weekly-grid, .iot-settings {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.stopwatch-display {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.grid-item {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
