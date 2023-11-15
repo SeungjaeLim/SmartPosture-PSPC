@@ -5,6 +5,7 @@ import LoginPage from './LoginPage';
 import StopwatchPage from './StopwatchPage';
 import WeeklyGrid from './WeeklyGrid';
 import IOTSettings from './IOTSettings';
+import RegisterPage from './RegisterPage';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -51,6 +52,13 @@ function App() {
   const handleSetIOT = () => {
     // Set IOT logic here
   };
+  const handleRegister = (username, email, password) => {
+    // Handle the registration logic here
+    // For now, just log the details
+    console.log(username, email, password);
+    // You might want to set loggedIn to true after successful registration
+  };
+
 
   const formatTime = (totalSeconds) => {
     const hours = Math.floor(totalSeconds / 3600);
@@ -71,13 +79,19 @@ function App() {
     return formatTime(totalSecondsToday);
   };
 
+  const [onRegisterPage, setOnRegisterPage] = useState(false); // State to track the registration page
+  const navigateToRegister = () => setOnRegisterPage(true);
+  const navigateToLogin = () => setOnRegisterPage(false);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
+      <Box display="flex">
         <Container maxWidth="sm">
-          {!loggedIn ? (
-            <LoginPage onLogin={handleLogin} />
+        {!loggedIn && !onRegisterPage ? (
+            <LoginPage onLogin={handleLogin} onNavigateRegister={navigateToRegister} />
+          ) : onRegisterPage ? (
+            <RegisterPage onRegister={handleRegister} onNavigateLogin={navigateToLogin} />
           ) : onStopwatchPage ? (
             <StopwatchPage onStop={handleStopStudy} />
           ) : (
