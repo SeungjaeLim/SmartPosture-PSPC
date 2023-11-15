@@ -16,6 +16,7 @@ function RegisterPage({ onRegister, onNavigateLogin }) {
 
   return (
     <Box mt={5}>
+        <img src={`${process.env.PUBLIC_URL}/images/reg_title.jfif`} alt="Title" style={{ maxWidth: '100%', height: 'auto' }} />
       <form onSubmit={handleSubmit}>
         <TextField
           label="Username"
