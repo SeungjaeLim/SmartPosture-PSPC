@@ -107,7 +107,10 @@ function App() {
   };
 
   const getTodaysStudyTime = () => {
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const koreaTime = new Date(now.getTime() + (9 * 60 * 60 * 1000)); // Adding 9 hours for KST
+
+    const today = koreaTime.toISOString().split('T')[0];
     const todayData = studyData.find(entry => entry.date === today);
     const totalSecondsToday = (todayData ? (todayData.correctPostureTime + todayData.incorrectPostureTime) : 0) * 60;
     return formatTime(totalSecondsToday);
