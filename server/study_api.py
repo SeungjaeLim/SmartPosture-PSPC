@@ -7,12 +7,15 @@ import glob
 import cv2
 import io
 from PIL import Image
+from chat import llm_advice
+
+
 
 router = APIRouter()
 posture_model = PostureModel() 
 
 @router.get("/study-data")
-def get_study_data():
+async def get_study_data():
     connection = db.get_db_connection()
     cursor = connection.cursor()
     # SQL query to fetch and aggregate data
@@ -25,7 +28,6 @@ def get_study_data():
     GROUP BY DATE(date)
     ORDER BY DATE(date)
     """
-    print(query)
     try:
         cursor.execute(query)
         rows = cursor.fetchall()
@@ -40,8 +42,33 @@ def get_study_data():
         connection.close()
 
 @router.get("/advise")
-def get_advise():
-    return "Hi"
+async def get_advise():
+    connection = db.get_db_connection()
+    cursor = connection.cursor()
+    try:
+        # Query to get counts of different postures
+        query = """
+        SELECT status, COUNT(*) as count
+        FROM log
+        GROUP BY status
+        """
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        posture_counts = {row[0]: row[1] for row in rows}
+        # Formulate your message to the chat API
+        posture_descriptions = []
+        for posture, minutes in posture_counts.items():
+            if posture == 'correct':
+                posture_descriptions.append(f"{minutes} minutes of correct posture")
+            else:
+                posture_descriptions.append(f"{minutes} minutes of {posture} issues")
+        
+        posture_query = ", and ".join(posture_descriptions)# Send this message to the chat API and LangChain
+        return llm_advice(posture_query)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        connection.close()
 
 @router.post("/update-study")
 async def update_study():
