@@ -7,9 +7,31 @@ function LoginPage({ onLogin, onNavigateRegister }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    onLogin();
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/login/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: username,
+          password: password,
+        }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.message); // Or handle the successful login
+        onLogin(); // Assuming this updates the loggedIn state
+      } else {
+        console.error('Login failed');
+        // Handle login failure
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (

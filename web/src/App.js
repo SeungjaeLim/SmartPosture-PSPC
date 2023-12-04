@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import LoginPage from './LoginPage';
 import StopwatchPage from './StopwatchPage';
@@ -33,11 +33,44 @@ const theme = createTheme({
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [onStopwatchPage, setOnStopwatchPage] = useState(false);
-  const [studyData, setStudyData] = useState([
-    { date: '2023-11-01', correctPostureTime: 120, incorrectPostureTime: 30 },
-    { date: '2023-11-02', correctPostureTime: 90, incorrectPostureTime: 15 },
-    // ... more dates with times
-  ]);
+  const [studyData, setStudyData] = useState([]);
+  const [advise, setAdvise] = useState('');
+
+  const fetchAdvise = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/advise`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      let data = await response.text();
+      if (data.startsWith('"') && data.endsWith('"')) {
+        data = data.substring(1, data.length - 1);
+      }
+      setAdvise(data);
+    } catch (error) {
+      console.error('Error fetching Advise:', error);
+    }
+  }
+
+  // Fetch study data from API
+  const fetchStudyData = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/study-data`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setStudyData(data);
+    } catch (error) {
+      console.error('Error fetching study data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStudyData();
+    fetchAdvise();
+  }, []);
+
   const [currentTemp, setCurrentTemp] = useState(22);
   const [currentHumid, setCurrentHumid] = useState(45);
   const [preferredTemp, setPreferredTemp] = useState(24);
@@ -45,20 +78,23 @@ function App() {
 
   const handleLogin = () => setLoggedIn(true);
   const handleStartStudy = () => setOnStopwatchPage(true);
-  const handleStopStudy = (studiedTime) => {
+  const handleStopStudy = async (studiedTime) => {
     setOnStopwatchPage(false);
-    // Update study data logic here
+    // Process the studied time if needed
+    console.log('Studied Time:', studiedTime);
+    // Fetch updated study data from API
+    await fetchStudyData();
+    await fetchAdvise();
   };
+
   const handleSetIOT = () => {
     // Set IOT logic here
   };
+
   const handleRegister = (username, email, password) => {
     // Handle the registration logic here
-    // For now, just log the details
     console.log(username, email, password);
-    // You might want to set loggedIn to true after successful registration
   };
-
 
   const formatTime = (totalSeconds) => {
     const hours = Math.floor(totalSeconds / 3600);
@@ -70,16 +106,14 @@ function App() {
       .join(':');
   };
 
-  
   const getTodaysStudyTime = () => {
     const today = new Date().toISOString().split('T')[0];
     const todayData = studyData.find(entry => entry.date === today);
-    // Assuming study times are stored in minutes in your data
     const totalSecondsToday = (todayData ? (todayData.correctPostureTime + todayData.incorrectPostureTime) : 0) * 60;
     return formatTime(totalSecondsToday);
   };
 
-  const [onRegisterPage, setOnRegisterPage] = useState(false); // State to track the registration page
+  const [onRegisterPage, setOnRegisterPage] = useState(false);
   const navigateToRegister = () => setOnRegisterPage(true);
   const navigateToLogin = () => setOnRegisterPage(false);
 
@@ -88,7 +122,7 @@ function App() {
       <CssBaseline />
       <Box display="flex">
         <Container maxWidth="sm">
-        {!loggedIn && !onRegisterPage ? (
+          {!loggedIn && !onRegisterPage ? (
             <LoginPage onLogin={handleLogin} onNavigateRegister={navigateToRegister} />
           ) : onRegisterPage ? (
             <RegisterPage onRegister={handleRegister} onNavigateLogin={navigateToLogin} />
@@ -102,6 +136,7 @@ function App() {
               <Button variant="contained" color="primary" onClick={handleStartStudy} sx={{ mb: 2 }}>
                 Start Study
               </Button>
+              {advise && <Typography>{advise}</Typography>}
               <WeeklyGrid studyData={studyData} />
               <Table sx={{ mt: 2, mx: 'auto' }}>
                 <TableBody>
@@ -117,13 +152,12 @@ function App() {
                   </TableRow>
                   <TableRow>
                     <TableCell align="center"><LightModeIcon /></TableCell>
-                    <TableCell align="center">--</TableCell> {/* Replace -- with actual data */}
-                    <TableCell align="center">--</TableCell> {/* Replace -- with actual data */}
+                    <TableCell align="center">--</TableCell>
+                    <TableCell align="center">--</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
               <IOTSettings onSetIOT={handleSetIOT} />
-              
             </Box>
           )}
         </Container>
