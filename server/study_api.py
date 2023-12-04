@@ -1,16 +1,78 @@
 from fastapi import APIRouter, HTTPException, Depends
+from datetime import datetime
 from pydantic import BaseModel
 import db
+from model import PostureModel 
+import glob
+import cv2
+import io
+from PIL import Image
 
 router = APIRouter()
+posture_model = PostureModel() 
 
 @router.get("/study-data")
 def get_study_data():
-    # Your logic to fetch and return study data
-    return [{"date": "2023-11-01", "correctPostureTime": 120, "incorrectPostureTime": 30}, 
-            {"date": "2023-11-02", "correctPostureTime": 120, "incorrectPostureTime": 30},
-            {"date": "2023-11-03", "correctPostureTime": 150, "incorrectPostureTime": 30}]
+    connection = db.get_db_connection()
+    cursor = connection.cursor()
+    # SQL query to fetch and aggregate data
+    query = """
+    SELECT
+        DATE(date) as date,
+        SUM(CASE WHEN status = 'correct' THEN 1 ELSE 0 END) as correctPostureTime,
+        SUM(CASE WHEN status != 'correct' THEN 1 ELSE 0 END) as incorrectPostureTime
+    FROM log
+    GROUP BY DATE(date)
+    ORDER BY DATE(date)
+    """
+    print(query)
+    try:
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        study_data = [
+            {"date": row[0], "correctPostureTime": row[1], "incorrectPostureTime": row[2]}
+            for row in rows
+        ]
+        return study_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        connection.close()
 
 @router.get("/advise")
 def get_advise():
     return "Hi"
+
+@router.post("/update-study")
+async def update_study():
+    # Capture an image from the webcam
+    cap = cv2.VideoCapture(0)  # 0 is typically the default camera
+    ret, frame = cap.read()
+    cap.release()
+    if not ret:
+        return {"error": "Failed to capture image"}
+    
+    # Convert the captured frame to PIL Image
+    image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    pil_image = Image.fromarray(image)
+
+    # Analyze the image with your CNN
+    result = posture_model.analyze_image(pil_image)
+
+    insert_log(result)
+    # Logic to update study time based on CNN result
+    # Save to DB, etc.
+    return {"result": result}
+
+def insert_log(status):
+    connection = db.get_db_connection()
+    cursor = connection.cursor()
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(current_time, status)
+    try:
+        cursor.execute("INSERT INTO log (date, status) VALUES (%s, %s)", (current_time, status))
+        connection.commit()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        connection.close()
