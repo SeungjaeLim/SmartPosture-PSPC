@@ -15,7 +15,7 @@ class RegisterData(BaseModel):
 
 
 @router.post("/login/")
-def login(login_data: LoginData):
+async def login(login_data: LoginData):
     connection = db.get_db_connection()
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM users WHERE id = %s AND passwd = %s", 
@@ -29,7 +29,7 @@ def login(login_data: LoginData):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
 @router.post("/register/")
-def register(register_data: RegisterData):
+async def register(register_data: RegisterData):
     connection = db.get_db_connection()
     cursor = connection.cursor()
     
