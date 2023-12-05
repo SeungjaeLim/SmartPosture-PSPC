@@ -5,6 +5,7 @@ from torchvision import models
 from torch import nn, optim
 from torch.utils.data import DataLoader
 from torchvision.datasets import ImageFolder
+import matplotlib.pyplot as plt
 import os
 
 # Define transformations for the train and validation datasets
@@ -39,8 +40,13 @@ optimizer = optim.Adam(model.fc.parameters(), lr=0.001)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
+# Initialize lists for storing loss and accuracy values
+train_loss = []
+val_accuracy = []
+
 for epoch in range(10):  # Number of epochs
     model.train()
+    running_loss = 0.0
     for inputs, labels in train_loader:
         inputs, labels = inputs.to(device), labels.to(device)
 
@@ -50,6 +56,12 @@ for epoch in range(10):  # Number of epochs
         loss.backward()
         optimizer.step()
         
+        running_loss += loss.item()
+    
+    # Average loss for this epoch
+    epoch_loss = running_loss / len(train_loader)
+    train_loss.append(epoch_loss)
+
     # Validation phase
     correct = 0
     total = 0
@@ -63,8 +75,26 @@ for epoch in range(10):  # Number of epochs
             correct += (predicted == labels).sum().item()
 
     accuracy = 100 * correct / total
-    print(f'Epoch {epoch+1}, Validation Accuracy: {accuracy:.2f}%')
+    val_accuracy.append(accuracy)
+    print(f'Epoch {epoch+1}, Loss: {epoch_loss:.4f}, Validation Accuracy: {accuracy:.2f}%')
 
+# Plotting the training loss and validation accuracy
+plt.figure(figsize=(12, 5))
+plt.subplot(1, 2, 1)
+plt.plot(train_loss, label='Training Loss')
+plt.title('Training Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend()
+
+plt.subplot(1, 2, 2)
+plt.plot(val_accuracy, label='Validation Accuracy')
+plt.title('Validation Accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy (%)')
+plt.legend()
+
+plt.show()
 
 # Save the model weights
 torch.save(model.state_dict(), './model_weights.pth')
