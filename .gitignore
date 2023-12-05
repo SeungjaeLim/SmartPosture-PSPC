@@ -1,5 +1,5 @@
 server/config.py
-
+server/data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
