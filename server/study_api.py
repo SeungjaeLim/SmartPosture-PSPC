@@ -104,7 +104,7 @@ async def update_study():
     display = bundle.displays[0]
 
     if result != "correct":
-        display.text = "Incorrect Posture Detected!"     
+        display.text = result + "Warning!!"     
         speaker.volume = 100 # Example values, change as needed
         time.sleep(3)
         display.clear()

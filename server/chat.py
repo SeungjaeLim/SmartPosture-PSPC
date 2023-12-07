@@ -21,7 +21,7 @@ def llm_advice(res):
     template = """
     ### Instructions ### 
     You are an orthopaedic surgeon. Based on the statistics about my study posture, please provide me with a brief diagnosis, the likely problem, and how you can correct it.
-    Answers should be five sentences or less.
+    Answers should be three sentences or less.
     ---
     """
     system_message_prompt = SystemMessagePromptTemplate.from_template(template)

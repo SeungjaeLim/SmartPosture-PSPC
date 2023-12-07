@@ -65,7 +65,7 @@ function WeeklyGrid({ studyData }) {
     <Typography id="study-details" variant="h6" component="h2">
       Study Details - {selectedData.date}
     </Typography>
-    <img src={`${process.env.PUBLIC_URL}/images/cat1.jpg`} alt="Cat" style={{ maxWidth: '100%', height: 'auto', marginTop: '20px' }} />
+    <img src={`${process.env.PUBLIC_URL}/images/cat1.png`} alt="Cat" style={{ maxWidth: '100%', height: 'auto', marginTop: '20px' }} />
     <Typography id="study-details-description" sx={{ mt: 2 }}>
       Correct Posture Time: {selectedData.correctPostureTime} minutes
     </Typography>
