@@ -66,10 +66,35 @@ function App() {
     }
   };
 
+  const fetchEnvData = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/env`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setEnvData({
+        humidity: data.humidity,
+        temperature: data.temperature,
+        brightness: data.brightness
+      });
+    } catch (error) {
+      console.error('Error fetching environment data:', error);
+    }
+  };
+
+
   useEffect(() => {
     fetchStudyData();
     fetchAdvise();
+    fetchEnvData();
   }, []);
+
+  const [envData, setEnvData] = useState({
+    humidity: null,
+    temperature: null,
+    brightness: null
+  });
 
   const [currentTemp, setCurrentTemp] = useState(22);
   const [currentHumid, setCurrentHumid] = useState(45);
@@ -139,23 +164,30 @@ function App() {
               <Button variant="contained" color="primary" onClick={handleStartStudy} sx={{ mb: 2 }}>
                 Start Study
               </Button>
-              {advise && <Typography>{advise}</Typography>}
+              {advise && (
+            <>
+              <Box textAlign="center" mt={5}>
+                <img src={`${process.env.PUBLIC_URL}/images/doctor.png`} alt="Advice" style={{ maxWidth: '50%', height: 'auto' }} />
+              </Box>
+              <Typography>{advise}</Typography>
+            </>
+          )}
               <WeeklyGrid studyData={studyData} />
               <Table sx={{ mt: 2, mx: 'auto' }}>
                 <TableBody>
                   <TableRow>
                     <TableCell align="center"><ThermostatIcon /></TableCell>
-                    <TableCell align="center">{currentTemp}°C</TableCell>
+                    <TableCell align="center">{envData.temperature ? `${envData.temperature}°C` : '--'}</TableCell>
                     <TableCell align="center">{preferredTemp}°C</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell align="center"><OpacityIcon /></TableCell>
-                    <TableCell align="center">{currentHumid}%</TableCell>
+                    <TableCell align="center">{envData.humidity ? `${envData.humidity}%` : '--'}</TableCell>
                     <TableCell align="center">{preferredHumid}%</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell align="center"><LightModeIcon /></TableCell>
-                    <TableCell align="center">--</TableCell>
+                    <TableCell align="center">{envData.brightness ? `${envData.brightness}` : '--'}</TableCell>
                     <TableCell align="center">--</TableCell>
                   </TableRow>
                 </TableBody>

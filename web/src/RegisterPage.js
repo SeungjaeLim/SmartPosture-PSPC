@@ -8,15 +8,39 @@ function RegisterPage({ onRegister, onNavigateLogin }) {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState(''); // Additional field for email
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Here, you'll handle the registration logic
-    onRegister(username, email, password);
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/register/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: username,
+          password: password,
+          email: email,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        // Handle successful registration (you can adjust this part as needed)
+        console.log('Registration successful:', data.message);
+        onRegister(username, email, password);
+      } else {
+        // Handle errors, such as user already exists
+        console.error('Registration error:', data.detail);
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+    }
   };
 
   return (
     <Box mt={5}>
-        <img src={`${process.env.PUBLIC_URL}/images/reg_title.jfif`} alt="Title" style={{ maxWidth: '100%', height: 'auto' }} />
+        <img src={`${process.env.PUBLIC_URL}/images/title.jpg`} alt="Title" style={{ maxWidth: '100%', height: 'auto' }} />
       <form onSubmit={handleSubmit}>
         <TextField
           label="Username"
