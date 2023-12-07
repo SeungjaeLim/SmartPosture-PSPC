@@ -1,18 +1,9 @@
 # PSPC
-<img src="https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=NGINX&logoColor=white"/>
-<img src="https://img.shields.io/badge/OpenCV-5C3EE8?style=flat-square&logo=OpenCV&logoColor=white"/>
-<img src="https://img.shields.io/badge/PyMODI-007396?style=flat-square&logoColor=white"/> <!-- No official PyMODI logo available -->
-<img src="https://img.shields.io/badge/CUDA-76B900?style=flat-square&logo=NVIDIA&logoColor=white"/>
-<img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=PyTorch&logoColor=white"/>
-<img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=FastAPI&logoColor=white"/>
-<img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white"/>
-<img src="https://img.shields.io/badge/LangChain-007396?style=flat-square&logoColor=white"/> <!-- No official LangChain logo available -->
-<img src="https://img.shields.io/badge/OpenAI_API-412991?style=flat-square&logo=OpenAI&logoColor=white"/>
-<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/>
-<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=black"/>
-<img src="https://img.shields.io/badge/Github_Pages-222222?style=flat-square&logo=GitHub&logoColor=white"/>
-
 SmartPosture: Personalized Study Posture Care
+<img src="https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=NGINX&logoColor=white"/> <img src="https://img.shields.io/badge/OpenCV-5C3EE8?style=flat-square&logo=OpenCV&logoColor=white"/> <img src="https://img.shields.io/badge/PyMODI-007396?style=flat-square&logoColor=white"/> <!-- No official PyMODI logo available --> <img src="https://img.shields.io/badge/CUDA-76B900?style=flat-square&logo=NVIDIA&logoColor=white"/> <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=PyTorch&logoColor=white"/> <img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=FastAPI&logoColor=white"/> <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white"/> <img src="https://img.shields.io/badge/LangChain-007396?style=flat-square&logoColor=white"/> <!-- No official LangChain logo available --> <img src="https://img.shields.io/badge/OpenAI_API-412991?style=flat-square&logo=OpenAI&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=black"/> <img src="https://img.shields.io/badge/Github_Pages-222222?style=flat-square&logo=GitHub&logoColor=white"/>
+
+
+
 
 ## Purpose
 SmartPosture is designed to provide personalized posture care for individuals during their study sessions. The application monitors, records, and advises users on maintaining correct posture, enhancing their overall well-being and productivity.
@@ -74,7 +65,7 @@ SmartPosture is designed to provide personalized posture care for individuals du
   - Integration of routers from `api`, `account_api`, and `study_api`.
 
 ### model.py
-![Alt text](image.png)
+![image](https://github.com/SeungjaeLim/PSPC/assets/74184274/00f6f6c8-ec36-490a-a4ba-7a22a5bb0ca5)
 - **Description**: This file hosts the `PostureModel` class, which leverages a deep learning model for posture analysis in images. It employs the ResNet18 model, a renowned convolutional neural network, pre-trained on the ImageNet dataset. ImageNet's extensive visual database is pivotal for training deep neural networks in diverse visual recognition tasks. The ResNet18 model is chosen for its efficiency and accuracy, making it ideal for image classification tasks, such as posture analysis.
 - **Key Class**: `PostureModel`
   - **Model Initialization**: Initializes the ResNet18 model with weights pre-trained on ImageNet. This pre-training aids the model in recognizing a broad array of visual features, enhancing its capability for posture classification.
@@ -108,19 +99,21 @@ SmartPosture is designed to provide personalized posture care for individuals du
 
 ### src/App.js
 - **Description**: The central component of the React application, `App.js` orchestrates the overall layout and navigation. It integrates key components such as `LoginPage`, `StopwatchPage`, `WeeklyGrid`, and `IOTSettings`, and manages global state and routing.
-![Alt text](image-1.png) ![Alt text](image-5.png)
+![image-1](https://github.com/SeungjaeLim/PSPC/assets/74184274/b77b90ab-19b0-4e32-b498-42ae19b9f5bb)
+![image-5](https://github.com/SeungjaeLim/PSPC/assets/74184274/8db7da85-00e1-4f2c-967f-5b39964e4101)
 
 ### src/LoginPage.js
 - **Description**: Handles the user login interface. This component sends a POST request to the `${process.env.REACT_APP_API_URL}/login/` endpoint with the user's credentials. On successful login, it updates the application's state to reflect the user's logged-in status.
-![Alt text](image-2.png)
+![image-2](https://github.com/SeungjaeLim/PSPC/assets/74184274/55e4f7bc-58e7-4c02-9c06-71e33db62d97)
 
 ### src/RegisterPage.js
 - **Description**: Manages the user registration process. It captures user input for username, email, and password, and sends this data in a POST request to the `${process.env.REACT_APP_API_URL}/register/` endpoint. It handles both successful registrations and errors, such as when a user already exists.
-![Alt text](image-3.png)
+![image-3](https://github.com/SeungjaeLim/PSPC/assets/74184274/8bbda575-0826-4d79-8530-ff34c52d4fee)
 
 ### src/StopwatchPage.js
 - **Description**: Functions as a timer for study sessions. This component periodically sends POST requests to the `${process.env.REACT_APP_API_URL}/update-study` endpoint every 60 seconds to update the server with ongoing session data. It displays warnings based on the server's response, particularly related to the user's posture.
-![Alt text](image-4.png)
+![image-4](https://github.com/SeungjaeLim/PSPC/assets/74184274/889947a9-c5f8-4022-a87a-827188b7600a)
+
 
 ### src/WeeklyGrid.js
 - **Description**: Provides a visual representation of the user's weekly study data. This component uses the `studyData` prop to display a pie chart for each day's study sessions, showing the breakdown of correct and incorrect posture times. It features an interactive modal for detailed daily analysis, enhancing user engagement.
