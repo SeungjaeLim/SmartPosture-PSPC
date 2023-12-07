@@ -8,11 +8,12 @@ import cv2
 import io
 from PIL import Image
 from chat import llm_advice
-
-
+import modi
+import time
 
 router = APIRouter()
 posture_model = PostureModel() 
+bundle = modi.MODI()
 
 @router.get("/study-data")
 async def get_study_data():
@@ -40,6 +41,17 @@ async def get_study_data():
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         connection.close()
+
+@router.get("/env")
+async def get_env():
+    env = bundle.envs[0]
+    env_data = {
+        "humidity": env.humidity,
+        "temperature": env.temperature,
+        "brightness": env.brightness,
+    }
+    return env_data
+
 
 @router.get("/advise")
 async def get_advise():
@@ -88,6 +100,15 @@ async def update_study():
 
     insert_log(result)
     # Logic to update study time based on CNN result
+    speaker = bundle.speakers[0]
+    display = bundle.displays[0]
+
+    if result != "correct":
+        display.text = "Incorrect Posture Detected!"     
+        speaker.volume = 100 # Example values, change as needed
+        time.sleep(3)
+        display.clear()
+        speaker.turn_off()
     # Save to DB, etc.
     return {"result": result}
 
