@@ -184,3 +184,7 @@ SmartPosture is designed to provide personalized posture care for individuals du
      | user123     | 1234   | user123@example.com     |
      ```
    - **Purpose**: Essential for user management, handling authentication, and storing contact information.
+
+![image](https://github.com/SeungjaeLim/PSPC/assets/74184274/b2cba208-da1c-4781-b102-46575c4f2b2b)
+![image](https://github.com/SeungjaeLim/PSPC/assets/74184274/d0ceb63b-d7df-4383-ab4e-beadaf954532)
+![image](https://github.com/SeungjaeLim/PSPC/assets/74184274/6a64391d-e4c9-4189-b543-1735fc6ede21)
