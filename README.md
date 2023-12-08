@@ -77,6 +77,30 @@ SmartPosture is designed to provide personalized posture care for individuals du
   - Instantiate `PostureModel` and utilize the `analyze_image` method with an image input for posture classification. The use of a pre-trained and fine-tuned ResNet18 model ensures robust feature extraction and efficient learning, making the model highly effective for practical posture analysis applications.
 
 
+### benchmark.py
+- **Description**: Implements various neural network architectures using PyTorch for posture analysis. These models are trained and evaluated on a custom dataset to identify the most effective approach for posture classification.
+- **Models**
+  - **SimpleCNN**:
+    - **Description**: A custom convolutional neural network designed with two convolutional layers followed by fully connected layers.
+    - **Purpose**: Serves as a baseline model for posture classification.
+  - **ResNet18**:
+    - **Description**: Adaptation of the pre-trained ResNet18 model, fine-tuned for posture classification.
+    - **Purpose**: Utilizes deep residual learning for enhanced accuracy in posture classification.
+  - **VGG16 (Pretrained and Not Pretrained)**:
+    - **Description**: Two variations of the VGG16 model are used, one with pre-trained weights and another trained from scratch.
+    - **Purpose**: To compare the efficacy of transfer learning against training a model from scratch.
+  - **PostureModel**:
+    - **Description**: Employs a pre-trained ResNet18 model, with the final layer adapted for classifying four posture categories.
+    - **Purpose**: Serves as the primary model for posture analysis, offering a balance between accuracy and computational efficiency.
+
+- **Training and Evaluation**
+  - **Process**: Training each model on the custom dataset, followed by evaluation on a validation dataset to ascertain accuracy.
+  - **Inference Time Measurement**: Assessing the models' efficiency by measuring the time taken for inference on the validation set.
+
+- **Results Visualization**
+  - **Description**: Performance metrics (training time, accuracy, and inference time) for each model are visualized and compared post-training and evaluation.
+
+
 ### study_api.py
 - **Description**: API router managing study-related data and functionalities, including data fetching, environmental data retrieval, posture advice, and study updates.
 - **Key Endpoints**: 
